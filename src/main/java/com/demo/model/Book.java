@@ -1,6 +1,7 @@
 package com.demo.model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -20,31 +21,40 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Product {
+public class Book {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String brand;
 	private BigDecimal price;
 	private int inventory;
+	private int pages;
+	private Date publishDate;
 	private String description;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "category_id")
 	private Category category;
 	
-
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Image> images;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "author_id")
+	private Author author;
 	
-	public Product(String name, String brand, BigDecimal price, int inventory, String description, Category category) {
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Image> images;
+
+	public Book(String name, BigDecimal price, int inventory, int pages, Date publishDate, String description,
+			Category category, Author author) {
 		super();
 		this.name = name;
-		this.brand = brand;
 		this.price = price;
 		this.inventory = inventory;
+		this.pages = pages;
+		this.publishDate = publishDate;
 		this.description = description;
 		this.category = category;
+		this.author = author;
 	}
+	
+	
 }

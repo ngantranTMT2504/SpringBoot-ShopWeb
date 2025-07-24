@@ -15,7 +15,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Category {
@@ -24,5 +23,11 @@ public class Category {
 	private Long id;
 	private String name;
 	@OneToMany(mappedBy = "category")
-	List<Product> products;
+	List<Book> books;
+	public Category(String name) {
+		super();
+		this.name = name;
+	}
+	
+	
 }
