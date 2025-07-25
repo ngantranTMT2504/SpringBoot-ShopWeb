@@ -7,5 +7,7 @@ import com.demo.model.Category;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 	Category getByName(String name);
+	
+	boolean existsByName(String name);
 
 }

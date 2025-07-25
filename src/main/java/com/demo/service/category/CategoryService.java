@@ -1,13 +1,13 @@
 package com.demo.service.category;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.demo.exception.AlreadyExistException;
 import com.demo.exception.ResourceNotFoundException;
 import com.demo.model.Category;
-import com.demo.repository.AuthorRepository;
-import com.demo.repository.BookRepository;
 import com.demo.repository.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,9 @@ public class CategoryService implements ICategoryService{
 
 	@Override
 	public Category addCategory(Category category) {
-		return null;
+		return Optional.of(category).filter(c -> !categoryRepository.existsByName(c.getName()))
+				.map(categoryRepository :: save)
+				.orElseThrow(() -> new AlreadyExistException(category.getName() + " aready exists"));
 	}
 
 	@Override
@@ -30,22 +32,29 @@ public class CategoryService implements ICategoryService{
 
 	@Override
 	public Category getCategoryByName(String name) {
-		return null;
+		return categoryRepository.getByName(name);
 	}
 
 	@Override
 	public void deleteCategory(Long id) {
+		categoryRepository.findById(id)
+		.ifPresentOrElse(categoryRepository::delete, () -> {
+			throw new ResourceNotFoundException("Category not found");
+		});
 		
 	}
 
 	@Override
 	public Category updateCategory(Category category, Long categoryId) {
-		return null;
+		return Optional.ofNullable(getCategoryById(categoryId)).map(oldCategory -> {
+			oldCategory.setName(category.getName());
+			return categoryRepository.save(oldCategory);
+		}).orElseThrow( () -> new ResourceNotFoundException("Category not found")) ;
 	}
 
 	@Override
 	public List<Category> getAllCategory() {
-		return null;
+		return categoryRepository.findAll();
 	}
 
 }
