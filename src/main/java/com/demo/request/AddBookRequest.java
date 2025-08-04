@@ -14,7 +14,6 @@ public class AddBookRequest {
 	private String name;
 	private BigDecimal price;
 	private int inventory;
-	private int pages;
 	private Date publishDate;
 	private String description;
 	private Category category;

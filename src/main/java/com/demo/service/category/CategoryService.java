@@ -3,6 +3,10 @@ package com.demo.service.category;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.demo.exception.AlreadyExistException;
@@ -23,6 +27,11 @@ public class CategoryService implements ICategoryService{
 				.map(categoryRepository :: save)
 				.orElseThrow(() -> new AlreadyExistException(category.getName() + " aready exists"));
 	}
+	
+	public Page<Category> getAllCategories(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        return categoryRepository.findAll(pageable);
+    }
 
 	@Override
 	public Category getCategoryById(Long id) {

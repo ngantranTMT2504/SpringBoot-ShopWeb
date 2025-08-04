@@ -14,8 +14,7 @@ public class BookUpdateRequest {
 	private String name;
 	private BigDecimal price;
 	private int inventory;
-	private int pages;
-	private Date publishDate;
+	private Date importDate;
 	private String description;
 	private Category category;
 	private Author author;

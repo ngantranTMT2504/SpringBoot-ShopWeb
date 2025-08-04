@@ -4,6 +4,10 @@ package com.demo.service.book;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.demo.exception.BookNotFoundException;
@@ -47,7 +51,7 @@ public class BookService implements IBookService {
 	}
 
 	private Book createBook(AddBookRequest book, Category category, Author author) {
-		return new Book(book.getName(), book.getPrice(), book.getInventory(), book.getPages(), book.getPublishDate(),
+		return new Book(book.getName(), book.getPrice(), book.getInventory(), book.getPublishDate(),
 				book.getDescription(), category, author);
 	}
 
@@ -73,9 +77,8 @@ public class BookService implements IBookService {
 		existingBook.setName(request.getName());
 		existingBook.setDescription(request.getDescription());
 		existingBook.setInventory(request.getInventory());
-		existingBook.setPages(request.getPages());
 		existingBook.setPrice(request.getPrice());
-		existingBook.setPublishDate(request.getPublishDate());
+		existingBook.setImportDate(request.getImportDate());
 
 		Category category = categoryRepository.getByName(request.getCategory().getName());
 		existingBook.setCategory(category);
@@ -86,8 +89,9 @@ public class BookService implements IBookService {
 	}
 
 	@Override
-	public List<Book> getAllBook() {
-		return bookRepository.findAll();
+	public Page<Book> getAllBook(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return bookRepository.findAll(pageable);
 	}
 
 	@Override
